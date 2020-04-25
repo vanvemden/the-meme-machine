@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>THE MEME MACHINE | fresh, fast, and fun</title>
+        <link href="style.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>THE MEME MACHINE | fresh, fast, and fun</h1>
+        <h2 class="dark">click here for dark theme</h2>
+        <div id="form">
+            <form>
+                <div class="form-group">
+                    <label for="url">image url</label>
+                    <input type="text" id="input-url" name="url" placeholder="Paste or enter the URL for your meme image">
+                </div>
+                <div class="form-group">
+                    <label for="upper-text">top text</label>
+                    <input type="text" id="input-upper-text" name="upper-text" placeholder="Enter text to be diplayed at the top (optional)">
+                </div>
+                <div class="form-group">
+                    <label for="lower-text">bottom text</label>
+                    <input type="text" id="input-lower-text" name="lower-text" placeholder="Enter text to be diplayed at the bottom (optional)">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" id="input-id" name="id" value="0">
+                    <button id="submit">post meme</button>
+                </div>
+            </form>
+        </div>
+        <div id="memes">
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+body {
+    color: black;
+    background-color: white;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.dark {
+    color: white;
+    background-color: black;
+}
+
+h2 {
+    margin-top: -0.67em;
+    padding: 1px 4px;
+    text-transform: uppercase;
+    font-size: 1.33em;
+}
+
+h2:hover {
+    color: blue;
+    
+}
+
+.form-group {
+}
+
+label {
+    float: left;
+    height: 20px;
+    width: 10vh;
+}
+
+input {
+    height: 20px;
+}
+
+div.meme {
+    position: relative;
+    float: left;
+    width: 450px;
+    margin: 20px;
+    text-align: center;
+}
+
+.text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 2.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    text-shadow:2px 2px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    0px 2px 0 #000,
+    2px 0px 0 #000,
+    0px -2px 0 #000,
+    -2px 0px 0 #000,
+    2px 2px 5px #000;
+}
+
+.upper {
+    top: 0;
+}
+
+.lower {
+    bottom: 20px;
+}
+
+img {
+    max-width: 100%;
+}
