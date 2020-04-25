@@ -2,22 +2,50 @@ window.addEventListener("load", function() {
 
    // start meme machine
    (function() {
-
+      setThemeTo(loadTheme());
       // post any saved memes
       postMemes(loadMemes());
       // listen for user input
+      setThemeToggleListener()
       setMemeFormListeners();
       setMemePostListeners();
 
    })();
+   
+   function setThemeTo(theme) {
+      ({ body, button, label } = getThemeElements() )
+      if (theme === "dark") {
+         body.classList.add('dark');
+         button.classList.remove("dark");
+         label.innerText = "light";
+      } else {
+         body.classList.remove("dark");
+         button.classList.add("dark");
+         label.innerText = "dark";
+      }
+   }
+
+   function setThemeToggleListener() {
+      let theme_toggle = document.getElementById("theme-toggle");
+      theme_toggle.addEventListener("click", function() {
+         let label = document.querySelector("#theme-toggle span");
+         if (label.innerText.toLowerCase() === "light") {
+            setThemeTo("light");
+            saveTheme("light");
+         } else {
+            setThemeTo("dark");
+            saveTheme("dark");
+         }
+      })
+   }
 
    function setMemeFormListeners() {
-
+      // update meme preview on input changes
       let input_url = document.getElementById("input-url");
       input_url.addEventListener("change", function(e) {
          previewMeme();
       })
-
+      // post meme 
       let button = document.getElementById("submit");
       button.addEventListener("click", function(e) {
          e.preventDefault();
@@ -35,13 +63,10 @@ window.addEventListener("load", function() {
          switch(event.target.name) {
             case "delete":
                deleteMeme(event.target.dataset.id);
-               console.log("delete meme", event.target.dataset.id);
                break;
             case "edit":
                editMeme(event.target.dataset.id);
-               console.log("edit meme", event.target.dataset.id)
                break;
-            default:
          }
       })
    }
@@ -73,6 +98,16 @@ window.addEventListener("load", function() {
       localStorage.setItem("meme-generator-memes", str);
    }
 
+   function saveTheme(theme) {
+      console.log(theme);
+      localStorage.setItem("meme-generator-theme", theme);
+   }
+
+   function loadTheme() {
+      let theme = localStorage.getItem("meme-generator-theme");
+      return theme || "light";
+   }
+
    function getMemeById(id) {
       let memes = loadMemes();
       for (let i = 0; i < memes.length; i++) {
@@ -95,6 +130,7 @@ window.addEventListener("load", function() {
          container.insertBefore(element, container.firstChild);
       } else {
          var posted_element = container.children[index]
+         console.log("posted_element", posted_element);
          container.replaceChild(element, posted_element);
       }
    }
@@ -172,6 +208,13 @@ window.addEventListener("load", function() {
       lowerText.value = meme.lowerText;
    }
 
+   function getThemeElements() {
+      let body = document.querySelector("body");
+      let button = document.getElementById("theme-toggle");
+      let label = document.querySelector("#theme-toggle span");
+      return { body, button, label };
+   }
+
    function getMemeFormElements() {
       let id = document.getElementById("input-id");
       let url = document.getElementById("input-url");
@@ -188,27 +231,6 @@ window.addEventListener("load", function() {
       let remove = document.createElement("button");
       let edit = document.createElement("button");
       return { container, image, divUpper, divLower, remove, edit };
-   }
-
-
-   function isImageUrl(url) {
-      var result = ImageExist(url);
-      if (result == true) {
-         console.log("url is good")
-      } else {
-         console.log("url is bad")
-      }
-   }
-
-   function ImageExist(url) {
-      var img = new Image();
-      img.src = url;   
-      if (img.height > 0) {
-          return false;
-      } else {
-          return true ;
-      }
-   }
-  
+   }  
 
 }); // end window load

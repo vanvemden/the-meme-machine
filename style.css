@@ -18,16 +18,17 @@ h2 {
 
 h2:hover {
     color: blue;
-    
 }
 
-.form-group {
+.dark h2 {
+    color: black;
+    background-color: white;
 }
 
 label {
     float: left;
     height: 20px;
-    width: 10vh;
+    width: 20vh;
 }
 
 input {
