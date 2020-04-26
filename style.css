@@ -46,11 +46,10 @@ label {
 }
 
 ::placeholder { 
-    color: red;
+    color: #999999;
   }
 
 input {
-    font-family: monospace;
     font-size: 12px;
     height: 20px;
     width: 74%;

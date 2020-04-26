@@ -1,21 +1,21 @@
 window.addEventListener("load", function() {
 
-   // start meme machine
+   // start the meme machine
    (function() {
+      // set (default) theme
       setThemeTo(loadTheme());
-      // post any saved memes
+      // post saved memes
       postMemes(loadMemes());
-      // listen for user input
-      setThemeToggleListener()
+      // set user input events
+      setThemeToggleListener();
       setMemeFormListeners();
       setMemePostListeners();
-
    })();
    
    function setThemeTo(theme) {
-      ({ body, button, label } = getThemeElements() )
+      ({ body, button, label } = getThemeElements());
       if (theme === "dark") {
-         body.classList.add('dark');
+         body.classList.add("dark");
          button.classList.remove("dark");
          label.innerText = "light";
       } else {
@@ -42,15 +42,17 @@ window.addEventListener("load", function() {
 
    function addOrUpdateMeme(meme) {
       let memes = loadMemes();
-      for (let i = 0; i < memes.length; i++) {
-         if (memes[i].id === meme.id ) {
-            memes[i] = meme;
+      for (let index = 0; index < memes.length; index++) {
+         if (memes[index].id === meme.id ) {
+            // update meme
+            memes[index] = meme;
             saveMemes(memes);
-            postMeme(meme, i);
+            postMeme(meme, index);
             return;
          }
       }
-      memes.push(meme);
+      // add meme
+      memes.unshift(meme);
       saveMemes(memes);
       postMeme(meme);
    }
@@ -61,7 +63,6 @@ window.addEventListener("load", function() {
    }
 
    function saveTheme(theme) {
-      console.log(theme);
       localStorage.setItem("meme-generator-theme", theme);
    }
 
@@ -72,12 +73,12 @@ window.addEventListener("load", function() {
 
    function getMemeById(id) {
       let memes = loadMemes();
-      for (let i = 0; i < memes.length; i++) {
-         if (memes[i].id === parseInt(id)) {
-            return memes[i];
+      for (let index = 0; index < memes.length; index++) {
+         if (memes[index].id === parseInt(id)) {
+            return memes[index];
          }
       }
-      return {}
+      return {};
    }
 
    function loadMemes() {
@@ -87,24 +88,23 @@ window.addEventListener("load", function() {
 
    function postMeme(meme, index = undefined) {
       let element = formatMeme(meme);
-      let container = document.getElementById("memes");
+      let container = getMemeContainerElement();
       if (index === undefined) {
          container.insertBefore(element, container.firstChild);
       } else {
-         var posted_element = container.children[index]
-         console.log("posted_element", posted_element);
-         container.replaceChild(element, posted_element);
+         var postedElement = container.children[index];
+         container.replaceChild(element, postedElement);
       }
    }
 
    function postMemes(memes) {
-      for (let i = 0; i < memes.length; i++) {
+      for (let i = memes.length - 1; i >= 0; i--) {
          postMeme(memes[i]);
       }
    }
 
    function clearMemes() {
-      let container = document.getElementById("memes");
+      let container = getMemeContainerElement();
       container.innerHTML = "";
    }
 
@@ -117,9 +117,9 @@ window.addEventListener("load", function() {
    function deleteMeme(id) {
       if (confirm("Are you sure your want to delete this meme?")) {
          let memes = loadMemes();
-         for (let i = 0; i < memes.length; i++) {
-            if (memes[i].id === parseInt(id)) {
-               memes.splice(i, 1)
+         for (let index = 0; index < memes.length; index++) {
+            if (memes[index].id === parseInt(id)) {
+               memes.splice(index, 1)
                break;
             }
          }
@@ -140,6 +140,7 @@ window.addEventListener("load", function() {
       divUpper.classList.add("upper", "text");
       divLower.innerText = meme.lowerText;
       divLower.classList.add("lower", "text");
+
       if (meme.id > 0) {
          remove.innerText = "Delete";
          remove.name = "delete";
@@ -148,7 +149,7 @@ window.addEventListener("load", function() {
          edit.name = "edit";
          edit.dataset.id = meme.id;
       } 
-
+      
       [ image, divUpper, divLower, remove, edit ].forEach( 
          element => container.appendChild(element) 
       );
@@ -157,9 +158,9 @@ window.addEventListener("load", function() {
   
 
    function setThemeToggleListener() {
-      let theme_toggle = document.getElementById("theme-toggle");
-      theme_toggle.addEventListener("click", function() {
-         let label = document.querySelector("#theme-toggle span");
+      let themeToggle = getThemeButtonElement();
+      themeToggle.addEventListener("click", function() {
+         let label = getThemeLabelElement();
          if (label.innerText.toLowerCase() === "light") {
             setThemeTo("light");
             saveTheme("light");
@@ -171,46 +172,52 @@ window.addEventListener("load", function() {
    }
 
    function setMemeFormListeners() {
-      // form input fields events
-      ({ id, url, upperText, lowerText, buttonPost, buttonRandom } = getMemeFormElements() )
-      url.addEventListener("change", function(e) {
+      ({ id, url, upperText, lowerText, buttonPost, buttonRandom, buttonClear } = getMemeFormElements() )
+
+      url.addEventListener("change", function() {
          previewMeme();
       })
 
-      upperText.addEventListener("keyup", function(e) {
+      upperText.addEventListener("keyup", function() {
          previewMeme();
       })
-
-      lowerText.addEventListener("keyup", function(e) {
+      
+      lowerText.addEventListener("keyup", function() {
          previewMeme();
       })
-
-      // form button events
-      buttonPost.addEventListener("click", function(e) {
-         e.preventDefault();
+      
+      buttonPost.addEventListener("click", function(event) {
+         event.preventDefault();
          let meme = getMemeFormInput();
          if (meme.id == 0) {
             meme.id = new Date().valueOf();
          }
          addOrUpdateMeme(meme);
          clearPreview();
+         clearMemeFormInput();
       });
-
-      buttonRandom.addEventListener("click", function(e) {
-         e.preventDefault();
+      
+      buttonRandom.addEventListener("click", function(event) {
+         event.preventDefault();
          fetchImageUrl().then( function(imageUrl) {
-            console.log(imageUrl);
             let inputUrl = getMemeFormElementUrl();
             inputUrl.value = imageUrl.url;
             previewMeme();
         }).catch( function(error) {
-             alert("Sorry, error loading random image.");
+             alert("Oops! Error loading random image.");
         });
       })
+      
+      buttonClear.addEventListener("click", function(event) {
+         event.preventDefault();
+         clearPreview();
+         clearMemeFormInput();
+      })
+
    }
 
    function setMemePostListeners() {
-      let container = document.getElementById("memes");
+      let container = getMemeContainerElement();
       container.addEventListener("click", function(event) {
          switch(event.target.name) {
             case "delete":
@@ -224,7 +231,7 @@ window.addEventListener("load", function() {
    }
 
    function getMemeFormInput() {
-      ({ id, url, upperText, lowerText } = getMemeFormElements() );
+      ({ id, url, upperText, lowerText } = getMemeFormElements());
       return {
          id: parseInt(id.value),
          url: url.value,
@@ -233,8 +240,17 @@ window.addEventListener("load", function() {
       }
    }
 
+   function clearMemeFormInput() {
+      setMemeFormInput({
+         id: 0,
+         url: "",
+         upperText: "",
+         lowerText: ""
+      });
+   }
+
    function setMemeFormInput(meme) {
-      ({ id, url, upperText, lowerText } = getMemeFormElements() );
+      ({ id, url, upperText, lowerText } = getMemeFormElements());
       id.value = meme.id;
       url.value = meme.url;
       upperText.value = meme.upperText;
@@ -243,9 +259,17 @@ window.addEventListener("load", function() {
 
    function getThemeElements() {
       let body = document.querySelector("body");
-      let button = document.getElementById("theme-toggle");
-      let label = document.querySelector("#theme-toggle span");
+      let button = getThemeButtonElement();
+      let label = getThemeLabelElement();
       return { body, button, label };
+   }
+
+   function getThemeButtonElement() {
+      return document.getElementById("theme-toggle");
+   }
+
+   function getThemeLabelElement() {
+      return document.querySelector("#theme-toggle span");
    }
 
    function getMemeFormElements() {
@@ -255,7 +279,8 @@ window.addEventListener("load", function() {
       let lowerText = document.getElementById("input-lower-text");
       let buttonPost = document.getElementById("submit");
       let buttonRandom = document.getElementById("random");
-      return { id, url, upperText, lowerText, buttonPost, buttonRandom };
+      let buttonClear = document.getElementById("clear");
+      return { id, url, upperText, lowerText, buttonPost, buttonRandom, buttonClear };
    }
 
    function getMemeFormElementUrl() {
@@ -264,6 +289,10 @@ window.addEventListener("load", function() {
 
    function getPreviewElement() {
       return document.getElementById("preview");
+   }
+
+   function getMemeContainerElement() {
+      return document.getElementById("memes");
    }
 
    function createMemePostElements() {
@@ -277,14 +306,19 @@ window.addEventListener("load", function() {
    }
 
    async function fetchImageUrl() {
-      let imageGeneratorUrl = "https://picsum.photos/450/450";
-      let imagePromise = fetch(imageGeneratorUrl).then( function(response) {
+      let imageGeneratorUrls = [
+         "https://loremflickr.com/450/450", 
+         "https://picsum.photos/450/450",
+         "https://source.unsplash.com/random/450x450",
+         "https://unsplash.it/450/450"
+      ];
+      let index = Math.floor(Math.random() * imageGeneratorUrls.length);
+      let imagePromise = fetch(imageGeneratorUrls[index]).then( function(response) {
               return response;
           }).catch( function(error) {
               return error;
           });
       return await imagePromise;
   }
-
 
 }); // end window load
