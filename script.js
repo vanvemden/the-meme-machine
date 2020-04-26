@@ -36,7 +36,8 @@ window.addEventListener("load", function() {
    }
 
    function clearPreview() {
-
+      let container = getPreviewElement();
+      container.innerHTML = "";
    }
 
    function addOrUpdateMeme(meme) {
@@ -130,7 +131,7 @@ window.addEventListener("load", function() {
 
 
    function formatMeme(meme) {
-      ({ container, image, divUpper, divLower, remove, edit } = getMemePostElements());
+      ({ container, image, divUpper, divLower, remove, edit } = createMemePostElements());
 
       container.classList.add("meme");
       container.setAttribute("id", meme.id);
@@ -154,6 +155,7 @@ window.addEventListener("load", function() {
       return container;
    }
   
+
    function setThemeToggleListener() {
       let theme_toggle = document.getElementById("theme-toggle");
       theme_toggle.addEventListener("click", function() {
@@ -169,27 +171,42 @@ window.addEventListener("load", function() {
    }
 
    function setMemeFormListeners() {
-      // update meme preview when url and text input changes
-      ({ id, url, upperText, lowerText } = getMemeFormElements() )
+      // form input fields events
+      ({ id, url, upperText, lowerText, buttonPost, buttonRandom } = getMemeFormElements() )
       url.addEventListener("change", function(e) {
          previewMeme();
       })
+
       upperText.addEventListener("keyup", function(e) {
          previewMeme();
       })
+
       lowerText.addEventListener("keyup", function(e) {
          previewMeme();
       })
-      // submit button will posting meme 
-      let button = document.getElementById("submit");
-      button.addEventListener("click", function(e) {
+
+      // form button events
+      buttonPost.addEventListener("click", function(e) {
          e.preventDefault();
          let meme = getMemeFormInput();
          if (meme.id == 0) {
             meme.id = new Date().valueOf();
          }
          addOrUpdateMeme(meme);
+         clearPreview();
       });
+
+      buttonRandom.addEventListener("click", function(e) {
+         e.preventDefault();
+         fetchImageUrl().then( function(imageUrl) {
+            console.log(imageUrl);
+            let inputUrl = getMemeFormElementUrl();
+            inputUrl.value = imageUrl.url;
+            previewMeme();
+        }).catch( function(error) {
+             alert("Sorry, error loading random image.");
+        });
+      })
    }
 
    function setMemePostListeners() {
@@ -233,13 +250,23 @@ window.addEventListener("load", function() {
 
    function getMemeFormElements() {
       let id = document.getElementById("input-id");
-      let url = document.getElementById("input-url");
+      let url = getMemeFormElementUrl();
       let upperText = document.getElementById("input-upper-text");
       let lowerText = document.getElementById("input-lower-text");
-      return { id, url, upperText, lowerText };
+      let buttonPost = document.getElementById("submit");
+      let buttonRandom = document.getElementById("random");
+      return { id, url, upperText, lowerText, buttonPost, buttonRandom };
    }
 
-   function getMemePostElements() {
+   function getMemeFormElementUrl() {
+      return document.getElementById("input-url");
+   }
+
+   function getPreviewElement() {
+      return document.getElementById("preview");
+   }
+
+   function createMemePostElements() {
       let container = document.createElement("div");
       let image = document.createElement("img");
       let divUpper = document.createElement("span");
@@ -249,8 +276,15 @@ window.addEventListener("load", function() {
       return { container, image, divUpper, divLower, remove, edit };
    }
 
-   function getPreviewElement() {
-      return document.getElementById("preview");
-   }
+   async function fetchImageUrl() {
+      let imageGeneratorUrl = "https://picsum.photos/450/450";
+      let imagePromise = fetch(imageGeneratorUrl).then( function(response) {
+              return response;
+          }).catch( function(error) {
+              return error;
+          });
+      return await imagePromise;
+  }
+
 
 }); // end window load
