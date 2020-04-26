@@ -25,57 +25,18 @@ window.addEventListener("load", function() {
       }
    }
 
-   function setThemeToggleListener() {
-      let theme_toggle = document.getElementById("theme-toggle");
-      theme_toggle.addEventListener("click", function() {
-         let label = document.querySelector("#theme-toggle span");
-         if (label.innerText.toLowerCase() === "light") {
-            setThemeTo("light");
-            saveTheme("light");
-         } else {
-            setThemeTo("dark");
-            saveTheme("dark");
-         }
-      })
-   }
-
-   function setMemeFormListeners() {
-      // update meme preview on input changes
-      let input_url = document.getElementById("input-url");
-      input_url.addEventListener("change", function(e) {
-         previewMeme();
-      })
-      // post meme 
-      let button = document.getElementById("submit");
-      button.addEventListener("click", function(e) {
-         e.preventDefault();
-         let meme = getMemeFormInput();
-         if (meme.id == 0) {
-            meme.id = new Date().valueOf();
-         }
-         addOrUpdateMeme(meme);
-      });
-   }
-
-   function setMemePostListeners() {
-      let container = document.getElementById("memes");
-      container.addEventListener("click", function(event) {
-         switch(event.target.name) {
-            case "delete":
-               deleteMeme(event.target.dataset.id);
-               break;
-            case "edit":
-               editMeme(event.target.dataset.id);
-               break;
-         }
-      })
-   }
-
    function previewMeme() {
-      let container = document.getElementById("preview");
+      let container = getPreviewElement();
       let meme = getMemeFormInput();
-      let element = formatMeme(meme);
-      container.innerHTML = element;
+      container.innerHTML = "";
+      if (meme.url) {
+         let element = formatMeme(meme);
+         container.appendChild(element);
+      }
+   }
+
+   function clearPreview() {
+
    }
 
    function addOrUpdateMeme(meme) {
@@ -149,6 +110,7 @@ window.addEventListener("load", function() {
    function editMeme(id) {
       let meme = getMemeById(id);
       setMemeFormInput(meme);
+      previewMeme(meme);
    }
    
    function deleteMeme(id) {
@@ -177,19 +139,73 @@ window.addEventListener("load", function() {
       divUpper.classList.add("upper", "text");
       divLower.innerText = meme.lowerText;
       divLower.classList.add("lower", "text");
-      remove.innerText = "Delete";
-      remove.name = "delete";
-      remove.dataset.id = meme.id;
-      edit.innerText = "Edit"
-      edit.name = "edit";
-      edit.dataset.id = meme.id;
+      if (meme.id > 0) {
+         remove.innerText = "Delete";
+         remove.name = "delete";
+         remove.dataset.id = meme.id;
+         edit.innerText = "Edit"
+         edit.name = "edit";
+         edit.dataset.id = meme.id;
+      } 
 
       [ image, divUpper, divLower, remove, edit ].forEach( 
-         item => container.appendChild(item) 
+         element => container.appendChild(element) 
       );
       return container;
    }
   
+   function setThemeToggleListener() {
+      let theme_toggle = document.getElementById("theme-toggle");
+      theme_toggle.addEventListener("click", function() {
+         let label = document.querySelector("#theme-toggle span");
+         if (label.innerText.toLowerCase() === "light") {
+            setThemeTo("light");
+            saveTheme("light");
+         } else {
+            setThemeTo("dark");
+            saveTheme("dark");
+         }
+      })
+   }
+
+   function setMemeFormListeners() {
+      // update meme preview when url and text input changes
+      ({ id, url, upperText, lowerText } = getMemeFormElements() )
+      url.addEventListener("change", function(e) {
+         previewMeme();
+      })
+      upperText.addEventListener("keyup", function(e) {
+         previewMeme();
+      })
+      lowerText.addEventListener("keyup", function(e) {
+         previewMeme();
+      })
+      // submit button will posting meme 
+      let button = document.getElementById("submit");
+      button.addEventListener("click", function(e) {
+         e.preventDefault();
+         let meme = getMemeFormInput();
+         if (meme.id == 0) {
+            meme.id = new Date().valueOf();
+         }
+         addOrUpdateMeme(meme);
+      });
+   }
+
+   function setMemePostListeners() {
+      let container = document.getElementById("memes");
+      container.addEventListener("click", function(event) {
+         switch(event.target.name) {
+            case "delete":
+               deleteMeme(event.target.dataset.id);
+               break;
+            case "edit":
+               editMeme(event.target.dataset.id);
+               break;
+         }
+      })
+   }
+
    function getMemeFormInput() {
       ({ id, url, upperText, lowerText } = getMemeFormElements() );
       return {
@@ -231,6 +247,10 @@ window.addEventListener("load", function() {
       let remove = document.createElement("button");
       let edit = document.createElement("button");
       return { container, image, divUpper, divLower, remove, edit };
-   }  
+   }
+
+   function getPreviewElement() {
+      return document.getElementById("preview");
+   }
 
 }); // end window load

@@ -4,11 +4,6 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
-.dark {
-    color: white;
-    background-color: black;
-}
-
 h2 {
     margin-top: -0.67em;
     padding: 1px 4px;
@@ -16,8 +11,9 @@ h2 {
     font-size: 1.33em;
 }
 
-h2:hover {
-    color: blue;
+.dark {
+    color: white;
+    background-color: black;
 }
 
 .dark h2 {
@@ -25,14 +21,51 @@ h2:hover {
     background-color: white;
 }
 
+h2:hover {
+    color: #0066FF;
+    cursor: pointer;
+}
+
+h2:hover > span {
+    color: black;
+}
+
+h2.dark:hover > span {
+    color: white;
+}
+
+.form-group {
+    margin: 8px 20px;
+    font-size: 1.3em;
+}
+
 label {
     float: left;
     height: 20px;
-    width: 20vh;
+    width: 25%;
 }
 
+::placeholder { 
+    color: red;
+  }
+
 input {
+    font-family: monospace;
+    font-size: 12px;
     height: 20px;
+    width: 74%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.dark input {
+    color: white;
+    border-bottom: 1px solid #dddddd;
+}
+
+button {
+    font-weight: bold;
 }
 
 div.meme {
@@ -42,6 +75,15 @@ div.meme {
     margin: 20px;
     text-align: center;
 }
+
+div.meme button {
+    visibility: hidden;
+    margin: 0 8px;
+}
+
+div.meme:hover button {
+    visibility: initial;
+} 
 
 .text {
     position: absolute;
@@ -72,4 +114,18 @@ div.meme {
 
 img {
     max-width: 100%;
+}
+
+#preview .meme img {
+    border: 2px solid red;
+    margin: -2px;
+}
+
+#preview .meme::after {
+    color: red;
+    content: "Preview only! Post meme to save.";
+}
+
+#preview button {
+    display: none;
 }
