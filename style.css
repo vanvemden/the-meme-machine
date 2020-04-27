@@ -47,6 +47,7 @@ label {
 
 ::placeholder { 
     color: #999999;
+    text-transform: initial;
   }
 
 input {
@@ -56,6 +57,11 @@ input {
     background-color: transparent;
     border: none;
     border-bottom: 1px solid black;
+}
+
+#input-upper-text,
+#input-lower-text {
+    text-transform: uppercase;
 }
 
 .dark input {
@@ -70,6 +76,7 @@ input {
     color: white;
     border-color: transparent;
     margin-right: 4px;
+    outline: none;
 }
 
 #form button:hover,
