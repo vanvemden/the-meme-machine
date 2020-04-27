@@ -235,6 +235,7 @@ window.addEventListener("load", function() {
                break;
             case "edit":
                editMeme(event.target.dataset.id);
+               document.getElementById("form").scrollIntoView()
                break;
          }
       })
