@@ -35,6 +35,15 @@ window.addEventListener("load", function() {
       }
    }
 
+   function previewImageLoading() {
+      let container = getPreviewElement();
+      let meme = getMemeFormInput();
+      container.innerHTML = "";
+      meme.url = "img/loading.gif";
+      let element = formatMeme(meme);
+      container.appendChild(element);
+   }
+
    function clearPreview() {
       let container = getPreviewElement();
       container.innerHTML = "";
@@ -199,6 +208,7 @@ window.addEventListener("load", function() {
       
       buttonRandom.addEventListener("click", function(event) {
          event.preventDefault();
+         previewImageLoading();
          fetchImageUrl().then( function(imageUrl) {
             let inputUrl = getMemeFormElementUrl();
             inputUrl.value = imageUrl.url;
