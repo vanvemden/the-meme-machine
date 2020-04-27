@@ -29,7 +29,7 @@ window.addEventListener("load", function() {
       let container = getPreviewElement();
       let meme = getMemeFormInput();
       container.innerHTML = "";
-      if (meme.url) {
+      if (isValidURL(meme.url)) {
          let element = formatMeme(meme);
          container.appendChild(element);
       }
@@ -198,12 +198,16 @@ window.addEventListener("load", function() {
       buttonPost.addEventListener("click", function(event) {
          event.preventDefault();
          let meme = getMemeFormInput();
-         if (meme.id == 0) {
-            meme.id = new Date().valueOf();
+         if (isValidURL(meme.url)) {
+            if (meme.id == 0) {
+               meme.id = new Date().valueOf();
+            }
+            addOrUpdateMeme(meme);
+            clearPreview();
+            clearMemeFormInput();
+         } else {
+            alert("Please enter a valid image URL.")
          }
-         addOrUpdateMeme(meme);
-         clearPreview();
-         clearMemeFormInput();
       });
       
       buttonRandom.addEventListener("click", function(event) {
@@ -331,5 +335,16 @@ window.addEventListener("load", function() {
           });
       return await imagePromise;
   }
+
+  // from: https://stackoverflow.com/a/5717133
+  function isValidURL(str) {
+     var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+         '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+         '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+         '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+         '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+     return !!pattern.test(str);
+ }
 
 }); // end window load

@@ -9,20 +9,20 @@ h2 {
     padding: 1px 4px;
     text-transform: uppercase;
     font-size: 1.33em;
+    color: #3388FF;
+    background-color: white;
 }
 
-.dark {
+body.dark {
     color: white;
     background-color: black;
 }
 
-.dark h2 {
-    color: black;
-    background-color: white;
+h2.dark {
+    background-color: black;
 }
 
 h2:hover {
-    color: #0066FF;
     cursor: pointer;
 }
 
@@ -63,8 +63,30 @@ input {
     border-bottom: 1px solid #dddddd;
 }
 
-button {
+#form button, #memes button {
     font-weight: bold;
+    cursor: pointer;
+    background-color: #3388FF;
+    color: white;
+    border-color: transparent;
+    margin-right: 4px;
+}
+
+#form button:hover,
+#memes button:hover {
+    color: black;
+    border-color: black;
+}
+
+body.dark #form button,
+body.dark #memes button {
+    color: black;
+}
+
+body.dark #form button:hover,
+body.dark #memes button:hover {
+    color: white;
+    border-color: white;
 }
 
 div.meme {
@@ -77,7 +99,6 @@ div.meme {
 
 div.meme button {
     visibility: hidden;
-    margin: 0 8px;
 }
 
 div.meme:hover button {
