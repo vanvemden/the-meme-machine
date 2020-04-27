@@ -70,7 +70,7 @@ button {
 div.meme {
     position: relative;
     float: left;
-    width: 450px;
+    max-width: 450px;
     margin: 20px;
     text-align: center;
 }
@@ -127,4 +127,11 @@ img {
 
 #preview button {
     display: none;
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+    label, input {
+        float: none;
+        width: 100%;
+    }
 }
