@@ -115,6 +115,35 @@ img {
     max-width: 100%;
 }
 
+#help {
+    clear: both;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+#help .item {
+    float:left;
+    max-width: 450px;
+    margin: 20px;
+    width: 100%;
+}
+
+#help button {
+    color: #333333;
+}
+
+#help .theme-bar {
+    color: white;
+    background-color: black;
+    padding: 0px 4px;
+}
+
+.dark #help .theme-bar {
+    color: black;
+    background-color: white;
+}
+
 #preview .meme img {
     border: 2px solid red;
     margin: -2px;
@@ -133,5 +162,17 @@ img {
     label, input {
         float: none;
         width: 100%;
+    }
+}
+
+@media only screen and (min-width : 996px) {
+    #help .item {
+        width: 49%;
+    }
+}
+
+@media only screen and (min-width : 1486px) {
+    #help .item:nth-child(3) {
+        clear: both;
     }
 }

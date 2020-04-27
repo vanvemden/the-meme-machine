@@ -151,10 +151,10 @@ window.addEventListener("load", function() {
       divLower.classList.add("lower", "text");
 
       if (meme.id > 0) {
-         remove.innerText = "Delete";
+         remove.innerText = "delete meme";
          remove.name = "delete";
          remove.dataset.id = meme.id;
-         edit.innerText = "Edit"
+         edit.innerText = "edit meme"
          edit.name = "edit";
          edit.dataset.id = meme.id;
       } 
